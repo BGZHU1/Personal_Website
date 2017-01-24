@@ -8,7 +8,8 @@ var bodyParser = require('body-parser');
 var $ = require('jQuery');
 
 var app = express();
-
+var port = process.env.PORT || 3000;
+var DB_URL=process.env.DATABASE_URL;
 // json method
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -44,7 +45,7 @@ app.get('/blog', function(req, res){
 
 app.post('/blog', function(req,res){
       //console.log('hi');
-  pg.connect('postgres://postgres:123456@localhost:5432/blogcontent', function(err, client, done){
+  pg.connect('DB_URL', function(err, client, done){
    client.query(`insert into blogcontent (title,body) values('${req.body.title}','${req.body.body}')`, function(err, result){
       //console.log(err);
 
@@ -59,7 +60,7 @@ app.post('/blog', function(req,res){
 })
 
 app.get('/blogcontent', function(req, res){
-  pg.connect('postgres://postgres:123456@localhost:5432/blogcontent', function(err, client, done){
+  pg.connect('DB_URL', function(err, client, done){
    client.query('select * from blogcontent', function(err, result) {
       //res.redirect('/display');
       //res.redirect('/board');
@@ -75,6 +76,6 @@ app.get('/blogcontent', function(req, res){
 })
 
 
-app.listen(3000, function(){
+app.listen(port, function(){
   console.log("Listening on port 3000")
 })
